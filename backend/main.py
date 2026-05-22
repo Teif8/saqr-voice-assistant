@@ -136,6 +136,8 @@ async def upload_audio(
         headers=headers
     )
     print(response.text)
+    print(response.status_code)
+    print(response.headers)
 
     # حفظ الصوت
     with open(
