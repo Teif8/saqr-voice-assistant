@@ -153,7 +153,7 @@ async def upload_audio(
     return {
         "transcript": transcript.text,
         "reply": reply,
-        "audio_url": "http://127.0.0.1:8000/audio/reply.mp3"
+        "audio_url": "https://saqr-voice-assistant-production.up.railway.app/audio/reply.mp3"
     }
 
 from pydantic import BaseModel
