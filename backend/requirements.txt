@@ -20,7 +20,7 @@ pillow==10.3.0
 torch==2.3.0
 torchvision==0.18.0
 
-openai-whisper==20240930
+git+https://github.com/openai/whisper.git
 
 streamlit==1.39.0
 
