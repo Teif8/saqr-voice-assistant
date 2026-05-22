@@ -1180,27 +1180,24 @@ return;
   
   if(data.audio_url){
 
-const audio =
-new Audio();
+const audio = new Audio(
+data.audio_url + "?t=" + Date.now()
+);
 
-audio.src =
-data.audio_url +
-"?t=" +
-new Date().getTime();
+audio.oncanplaythrough = async () => {
 
-audio.load();
+try{
 
-setTimeout(() => {
-
-audio.play()
-.then(() => {
+await audio.play();
 console.log("VOICE PLAYING");
-})
-.catch((err) => {
-console.log(err);
-});
 
-}, 500);
+}catch(err){
+
+console.log(err);
+
+}
+
+};
 
 }
   
