@@ -1178,26 +1178,33 @@ return;
   resultBox
   );
   
-  if(data.audio_url){
+ if(data.audio_url){
 
-const audio = new Audio(
-data.audio_url + "?t=" + Date.now()
-);
+const audio =
+document.createElement("audio");
 
-audio.oncanplaythrough = async () => {
+audio.controls = true;
 
-try{
+audio.autoplay = true;
 
-await audio.play();
+audio.src =
+data.audio_url +
+"?t=" +
+Date.now();
+
+document.body.appendChild(audio);
+
+audio.play()
+.then(() => {
+
 console.log("VOICE PLAYING");
 
-}catch(err){
+})
+.catch((err) => {
 
 console.log(err);
 
-}
-
-};
+});
 
 }
   
