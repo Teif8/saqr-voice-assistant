@@ -1187,12 +1187,16 @@ audio.controls = true;
 
 audio.autoplay = true;
 
+audio.style.width = "100%";
+
+audio.style.marginTop = "15px";
+
 audio.src =
 data.audio_url +
 "?t=" +
 Date.now();
 
-document.body.appendChild(audio);
+resultBox.appendChild(audio);
 
 audio.play()
 .then(() => {
