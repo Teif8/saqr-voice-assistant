@@ -6,6 +6,8 @@ from fastapi.staticfiles import StaticFiles
 from openai import OpenAI
 from dotenv import load_dotenv
 
+from pydantic import BaseModel
+
 from agent import ask_saqr
 
 import os
@@ -103,70 +105,50 @@ async def upload_audio(
     )
 
     # ElevenLabs API
-url = (
-"https://api.elevenlabs.io/v1/text-to-speech/"
-"21m00Tcm4TlvDq8ikWAM"
-)
+    url = (
+        "https://api.elevenlabs.io/v1/text-to-speech/"
+        "21m00Tcm4TlvDq8ikWAM"
+    )
 
-headers = {
+    headers = {
 
-"xi-api-key":
-os.getenv(
-"ELEVENLABS_API_KEY"
-),
+        "xi-api-key":
+        os.getenv(
+            "ELEVENLABS_API_KEY"
+        ),
 
-"Content-Type":
-"application/json",
+        "Content-Type":
+        "application/json",
 
-"Accept":
-"audio/mpeg"
-}
+        "Accept":
+        "audio/mpeg"
+    }
 
-data = {
+    data = {
 
-"text": reply,
+        "text": reply,
 
-"model_id":
-"eleven_multilingual_v2",
+        "model_id":
+        "eleven_multilingual_v2",
 
-"voice_settings": {
+        "voice_settings": {
 
-"stability": 0.5,
+            "stability": 0.5,
 
-"similarity_boost": 0.75
-}
+            "similarity_boost": 0.75
+        }
 
-}
+    }
 
-response = requests.post(
-url,
-json=data,
-headers=headers
-)
-
-print(response.status_code)
-
-speech_file_path = "reply.mp3"
-
-with open(
-speech_file_path,
-"wb"
-) as f:
-
-f.write(response.content)
-
-print("VOICE FILE SAVED")
-print(len(response.content))
-    
-# إرسال الطلب
+    # إرسال الطلب لـ ElevenLabs
     response = requests.post(
         url,
         json=data,
         headers=headers
     )
-    print(response.text)
+
     print(response.status_code)
-    print(response.headers)
+    print(response.text)
 
     # حفظ الصوت
     with open(
@@ -177,20 +159,24 @@ print(len(response.content))
         f.write(response.content)
 
     print("VOICE FILE SAVED")
-    print(response.headers)
     print(len(response.content))
 
     # إرسال الرد للفرونت
     return {
-        "transcript": transcript.text,
-        "reply": reply,
+
+        "transcript":
+        transcript.text,
+
+        "reply":
+        reply,
+
         "audio_url":
-"https://saqr-voice-assistant-production.up.railway.app/audio/reply.mp3"
+        "https://saqr-voice-assistant-production.up.railway.app/audio/reply.mp3"
+
     }
 
-from pydantic import BaseModel
 
-
+# شات عادي
 class ChatRequest(BaseModel):
     message: str
 
