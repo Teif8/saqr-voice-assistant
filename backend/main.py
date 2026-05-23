@@ -11,7 +11,6 @@ from pydantic import BaseModel
 from agent import ask_saqr
 
 import os
-import requests
 
 # تحميل المتغيرات
 load_dotenv()
@@ -104,64 +103,26 @@ async def upload_audio(
         "reply.mp3"
     )
 
-    # ElevenLabs API
-    url = (
-        "https://api.elevenlabs.io/v1/text-to-speech/"
-        "21m00Tcm4TlvDq8ikWAM"
+    # تحويل النص إلى صوت باستخدام OpenAI
+    speech_response = client.audio.speech.create(
+        model="gpt-4o-mini-tts",
+        voice="nova",
+        input=reply
     )
 
-    headers = {
-
-        "xi-api-key":
-        os.getenv(
-            "ELEVENLABS_API_KEY"
-        ),
-
-        "Content-Type":
-        "application/json",
-
-        "Accept":
-        "audio/mpeg"
-    }
-
-    data = {
-
-        "text": reply,
-
-        "model_id":
-        "eleven_multilingual_v2",
-
-        "voice_settings": {
-
-            "stability": 0.5,
-
-            "similarity_boost": 0.75
-        }
-
-    }
-
-    # إرسال الطلب لـ ElevenLabs
-    response = requests.post(
-        url,
-        json=data,
-        headers=headers
-    )
-
-    print(response.status_code)
-    print(response.text)
-
-    # حفظ الصوت
+    # حفظ الملف الصوتي
     with open(
         speech_file_path,
         "wb"
     ) as f:
 
-        f.write(response.content)
+        f.write(
+            speech_response.content
+        )
 
     print("VOICE FILE SAVED")
-    print(len(response.content))
 
-    # إرسال الرد للفرونت
+    # إرسال الرد
     return {
 
         "transcript":
