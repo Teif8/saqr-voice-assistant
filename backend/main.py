@@ -103,33 +103,62 @@ async def upload_audio(
     )
 
     # ElevenLabs API
-    url = (
-    "https://api.elevenlabs.io/v1/text-to-speech/"
-    "EXAVITQu4vr4xnSDxMaL"
+url = (
+"https://api.elevenlabs.io/v1/text-to-speech/"
+"21m00Tcm4TlvDq8ikWAM"
 )
 
-    headers = {
+headers = {
 
-        "xi-api-key":
-        os.getenv(
-            "ELEVENLABS_API_KEY"
-        ),
+"xi-api-key":
+os.getenv(
+"ELEVENLABS_API_KEY"
+),
 
-        "Content-Type":
-        "application/json"
-    }
+"Content-Type":
+"application/json",
 
-    data = {
-        "text": reply,
-        "model_id": "eleven_multilingual_v2",
-        "output_format": "mp3_44100_128",
-        "voice_settings": {
-            "stability": 0.4,
-            "similarity_boost": 0.8
-        }
-    }
+"Accept":
+"audio/mpeg"
+}
 
-    # إرسال الطلب
+data = {
+
+"text": reply,
+
+"model_id":
+"eleven_multilingual_v2",
+
+"voice_settings": {
+
+"stability": 0.5,
+
+"similarity_boost": 0.75
+}
+
+}
+
+response = requests.post(
+url,
+json=data,
+headers=headers
+)
+
+print(response.status_code)
+
+speech_file_path = "reply.mp3"
+
+with open(
+speech_file_path,
+"wb"
+) as f:
+
+f.write(response.content)
+
+print("VOICE FILE SAVED")
+print(len(response.content))
+    
+# إرسال الطلب
     response = requests.post(
         url,
         json=data,
@@ -155,7 +184,8 @@ async def upload_audio(
     return {
         "transcript": transcript.text,
         "reply": reply,
-        "audio_url": "https://saqr-voice-assistant-production.up.railway.app/audio/reply.mp3"
+        "audio_url":
+"https://saqr-voice-assistant-production.up.railway.app/audio/reply.mp3"
     }
 
 from pydantic import BaseModel
